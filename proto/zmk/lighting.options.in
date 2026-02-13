@@ -1,0 +1,3 @@
+# nanopb options for zmk/lighting.proto
+# Use callback encoding for effect name list (variable count/length)
+zmk.lighting.EffectList.effects  type:FT_CALLBACK
