@@ -1,4 +1,3 @@
-// Requests
 syntax = "proto3";
 
 package zmk.studio;

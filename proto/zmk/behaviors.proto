@@ -43,8 +43,8 @@ message BehaviorParameterValueDescriptionRange {
 message BehaviorParameterNil {}
 message BehaviorParameterLayerId {}
 message BehaviorParameterHidUsage {
-	uint32 keyboard_max = 1;
-	uint32 consumer_max = 2;
+        uint32 keyboard_max = 1;
+        uint32 consumer_max = 2;
 }
 
 message BehaviorParameterValueDescription {

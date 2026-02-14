@@ -1,137 +1,126 @@
-/*
- * Copyright (c) 2024 The ZMK Contributors
- *
- * SPDX-License-Identifier: MIT
- *
- * ZMK Studio Lighting (RGB Underglow) RPC Subsystem
- *
- * This proto defines the RPC messages for controlling RGB underglow lighting
- * via ZMK Studio, similar to how VIA/VIAL allows changing RGB settings.
- *
- * Subsystem field tag in studio.proto: 6 (lighting)
- */
-
 syntax = "proto3";
 
 package zmk.lighting;
 
-// ============================================================================
-//  Top-level RPC envelope (nested inside studio.Request / Response / Notification)
-// ============================================================================
+import "keymap.proto";
 
 message Request {
     oneof request_type {
-        bool              get_state       = 1;  // Get full RGB state
-        SetPowerRequest   set_power       = 2;  // Turn RGB on/off
-        SetEffectRequest  set_effect      = 3;  // Select effect by index
-        SetColorRequest   set_color       = 4;  // Set HSB color
-        SetSpeedRequest   set_speed       = 5;  // Set animation speed
-        SetBrightness     set_brightness  = 6;  // Set brightness independently
-        bool              list_effects    = 7;  // List available effect names
-        bool              save_state      = 8;  // Persist current state to flash
+        bool get_underglow_info = 1;
+        bool get_underglow_state = 2;
+        SetUnderglowStateRequest set_underglow_state = 3;
+        bool get_rgb_map = 4;
+        SetRgbMapBindingRequest set_rgb_map_binding = 5;
+        bool check_unsaved_changes = 6;
+        bool save_changes = 7;
+        bool discard_changes = 8;
     }
 }
 
 message Response {
     oneof response_type {
-        LightingState           get_state       = 1;
-        SetPowerResponse        set_power       = 2;
-        SetEffectResponse       set_effect      = 3;
-        SetColorResponse        set_color       = 4;
-        SetSpeedResponse        set_speed       = 5;
-        SetBrightnessResponse   set_brightness  = 6;
-        EffectList              list_effects    = 7;
-        SaveStateResponse       save_state      = 8;
+        UnderglowInfo get_underglow_info = 1;
+        UnderglowState get_underglow_state = 2;
+        SetUnderglowStateResponse set_underglow_state = 3;
+        RgbMap get_rgb_map = 4;
+        SetRgbMapBindingResponse set_rgb_map_binding = 5;
+        bool check_unsaved_changes = 6;
+        SaveChangesResponse save_changes = 7;
+        bool discard_changes = 8;
     }
 }
 
 message Notification {
     oneof notification_type {
-        LightingState state_changed = 1;  // Pushed when state changes on-device
+        bool unsaved_changes_status_changed = 1;
+        UnderglowState underglow_state_changed = 2;
+        UnderglowColorChanged underglow_color_changed = 3;
     }
 }
 
-// ============================================================================
-//  Data models
-// ============================================================================
-
-// Full snapshot of the RGB underglow state.  Returned by get_state and pushed
-// via the state_changed notification whenever something changes on-device
-// (e.g. the user pressed a physical RGB key).
-message LightingState {
-    bool   on             = 1;  // true = enabled
-    uint32 active_effect  = 2;  // index into the effect list
-    uint32 hue            = 3;  // 0-360
-    uint32 saturation     = 4;  // 0-100
-    uint32 brightness     = 5;  // 0-100
-    uint32 speed          = 6;  // 1-5, animation speed
+message UnderglowInfo {
+    uint32 led_count = 1;
+    repeated sint32 pixel_lookup = 2;
+    repeated RgbLayerInfo rgb_layers = 3;
+    bool rgb_map_editable = 4;
 }
 
-// A list of effect names the firmware supports.
-message EffectList {
-    repeated string effects = 1;
+message RgbLayerInfo {
+    uint32 layer_id = 1;
+    uint32 fade_delay = 2;
 }
 
-// ============================================================================
-//  Request types
-// ============================================================================
-
-message SetPowerRequest {
+message UnderglowState {
     bool on = 1;
+    uint32 effect = 2;
+    uint32 speed = 3;
+    uint32 hue = 4;
+    uint32 sat = 5;
+    uint32 brt = 6;
 }
 
-message SetEffectRequest {
-    uint32 effect_index = 1;
+message SetUnderglowStateRequest {
+    bool has_on = 1;
+    bool on = 2;
+
+    bool has_effect = 3;
+    uint32 effect = 4;
+
+    bool has_speed = 5;
+    uint32 speed = 6;
+
+    bool has_color = 7;
+    uint32 hue = 8;
+    uint32 sat = 9;
+    uint32 brt = 10;
 }
 
-// Allows setting H, S, B independently.  Only fields that are set (non-zero
-// or explicitly provided via `has_*` semantics) will be applied.
-// Client should fill all three for a full color change.
-message SetColorRequest {
-    uint32 hue        = 1;  // 0-360
-    uint32 saturation = 2;  // 0-100
-    uint32 brightness = 3;  // 0-100
+enum SetUnderglowStateResponse {
+    SET_UNDERGLOW_STATE_RESP_OK = 0;
+    SET_UNDERGLOW_STATE_RESP_INVALID_VALUE = 1;
+    SET_UNDERGLOW_STATE_RESP_NOT_SUPPORTED = 2;
 }
 
-message SetSpeedRequest {
-    uint32 speed = 1;  // 1-5
+message RgbMap {
+    repeated RgbLayer layers = 1;
 }
 
-message SetBrightness {
-    uint32 brightness = 1;  // 0-100
+message RgbLayer {
+    uint32 layer_id = 1;
+    uint32 fade_delay = 2;
+    repeated zmk.keymap.BehaviorBinding bindings = 3;
 }
 
-// ============================================================================
-//  Response types
-// ============================================================================
-
-enum SetPowerResponse {
-    SET_POWER_RESP_OK    = 0;
-    SET_POWER_RESP_ERROR = 1;
+message SetRgbMapBindingRequest {
+    uint32 layer_id = 1;
+    int32 key_position = 2;
+    zmk.keymap.BehaviorBinding binding = 3;
 }
 
-enum SetEffectResponse {
-    SET_EFFECT_RESP_OK              = 0;
-    SET_EFFECT_RESP_INVALID_INDEX   = 1;
-    SET_EFFECT_RESP_ERROR           = 2;
+enum SetRgbMapBindingResponse {
+    SET_RGB_MAP_BINDING_RESP_OK = 0;
+    SET_RGB_MAP_BINDING_RESP_INVALID_LOCATION = 1;
+    SET_RGB_MAP_BINDING_RESP_INVALID_BEHAVIOR = 2;
+    SET_RGB_MAP_BINDING_RESP_INVALID_PARAMETERS = 3;
+    SET_RGB_MAP_BINDING_RESP_NOT_SUPPORTED = 4;
+    SET_RGB_MAP_BINDING_RESP_INVALID_LAYER = 5;
 }
 
-enum SetColorResponse {
-    SET_COLOR_RESP_OK    = 0;
-    SET_COLOR_RESP_ERROR = 1;
+message SaveChangesResponse {
+    oneof result {
+        bool ok = 1;
+        SaveChangesErrorCode err = 2;
+    }
 }
 
-enum SetSpeedResponse {
-    SET_SPEED_RESP_OK    = 0;
-    SET_SPEED_RESP_ERROR = 1;
+enum SaveChangesErrorCode {
+    SAVE_CHANGES_ERR_OK = 0;
+    SAVE_CHANGES_ERR_GENERIC = 1;
+    SAVE_CHANGES_ERR_NOT_SUPPORTED = 2;
+    SAVE_CHANGES_ERR_NO_SPACE = 3;
 }
 
-enum SetBrightnessResponse {
-    SET_BRIGHTNESS_RESP_OK    = 0;
-    SET_BRIGHTNESS_RESP_ERROR = 1;
-}
-
-enum SaveStateResponse {
-    SAVE_STATE_RESP_OK    = 0;
-    SAVE_STATE_RESP_ERROR = 1;
+message UnderglowColorChanged {
+    uint32 layers = 1;
+    bool wakeup = 2;
 }
