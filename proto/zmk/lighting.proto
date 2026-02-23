@@ -15,6 +15,8 @@ message RgbUnderglowState {
     HsbColor color = 2;
     uint32 effect = 3;
     uint32 speed = 4;
+    uint32 effect_count = 5;
+    repeated string effect_names = 6;
 }
 
 message SetRgbUnderglowStateRequest {
