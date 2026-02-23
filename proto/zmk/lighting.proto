@@ -22,6 +22,7 @@ message SetRgbUnderglowStateRequest {
         bool on = 1;
         HsbColor color = 2;
         uint32 effect = 3;
+        uint32 speed = 4;
     }
 }
 
