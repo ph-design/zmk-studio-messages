@@ -58,6 +58,7 @@ message GetLayerLedColorsResponse {
     repeated LayerLedConfig layers = 1;
     uint32 key_count = 2;
     uint32 layer_count = 3;
+    bool enabled = 4;
 }
 
 message SetLayerLedBindingRequest {
@@ -97,6 +98,7 @@ message Request {
         bool get_caps_lock_indicator = 8;
         SetCapsLockIndicatorRequest set_caps_lock_indicator = 9;
         bool save_layer_led_state = 10;
+        bool set_layer_led_enabled = 11;
     }
 }
 
@@ -112,6 +114,7 @@ message Response {
         CapsLockIndicatorState get_caps_lock_indicator = 8;
         bool set_caps_lock_indicator = 9;
         bool save_layer_led_state = 10;
+        bool set_layer_led_enabled = 11;
     }
 }
 
