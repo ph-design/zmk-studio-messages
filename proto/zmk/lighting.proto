@@ -84,6 +84,10 @@ message SetCapsLockIndicatorRequest {
     }
 }
 
+message SetLayerLedEnabledRequest {
+    bool enabled = 1;
+}
+
 // --- Aggregated Request / Response / Notification ---
 
 message Request {
@@ -98,7 +102,7 @@ message Request {
         bool get_caps_lock_indicator = 8;
         SetCapsLockIndicatorRequest set_caps_lock_indicator = 9;
         bool save_layer_led_state = 10;
-        bool set_layer_led_enabled = 11;
+        SetLayerLedEnabledRequest set_layer_led_enabled = 11;
     }
 }
 
