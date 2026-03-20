@@ -42,6 +42,47 @@ message SetBacklightStateRequest {
     }
 }
 
+// --- Layer LED Colors ---
+
+message LayerLedBinding {
+    uint32 key_position = 1;
+    uint32 color = 2;           // 0xRRGGBB, 0 = transparent
+}
+
+message LayerLedConfig {
+    uint32 layer_id = 1;
+    repeated LayerLedBinding bindings = 2;
+}
+
+message GetLayerLedColorsResponse {
+    repeated LayerLedConfig layers = 1;
+    uint32 key_count = 2;
+    uint32 layer_count = 3;
+}
+
+message SetLayerLedBindingRequest {
+    uint32 layer_id = 1;
+    uint32 key_position = 2;
+    uint32 color = 3;           // 0xRRGGBB, 0 = transparent
+}
+
+// --- CapsLock Indicator ---
+
+message CapsLockIndicatorState {
+    bool enabled = 1;
+    uint32 off_color = 2;       // 0xRRGGBB
+    uint32 on_color = 3;        // 0xRRGGBB
+    uint32 key_position = 4;
+}
+
+message SetCapsLockIndicatorRequest {
+    oneof field {
+        bool enabled = 1;
+        uint32 off_color = 2;
+        uint32 on_color = 3;
+    }
+}
+
 // --- Aggregated Request / Response / Notification ---
 
 message Request {
@@ -51,6 +92,11 @@ message Request {
         bool get_backlight_state = 3;
         SetBacklightStateRequest set_backlight_state = 4;
         bool save_state = 5;
+        bool get_layer_led_colors = 6;
+        SetLayerLedBindingRequest set_layer_led_binding = 7;
+        bool get_caps_lock_indicator = 8;
+        SetCapsLockIndicatorRequest set_caps_lock_indicator = 9;
+        bool save_layer_led_state = 10;
     }
 }
 
@@ -61,6 +107,11 @@ message Response {
         BacklightState get_backlight_state = 3;
         bool set_backlight_state = 4;
         bool save_state = 5;
+        GetLayerLedColorsResponse get_layer_led_colors = 6;
+        bool set_layer_led_binding = 7;
+        CapsLockIndicatorState get_caps_lock_indicator = 8;
+        bool set_caps_lock_indicator = 9;
+        bool save_layer_led_state = 10;
     }
 }
 
