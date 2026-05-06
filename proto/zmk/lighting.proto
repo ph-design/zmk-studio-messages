@@ -74,6 +74,7 @@ message CapsLockIndicatorState {
     uint32 off_color = 2;       // 0xRRGGBB
     uint32 on_color = 3;        // 0xRRGGBB
     uint32 key_position = 4;
+    uint32 layer_id = 5;
 }
 
 message SetCapsLockIndicatorRequest {
@@ -81,6 +82,26 @@ message SetCapsLockIndicatorRequest {
         bool enabled = 1;
         uint32 off_color = 2;
         uint32 on_color = 3;
+        uint32 key_position = 4;
+        uint32 layer_id = 5;
+    }
+}
+
+message ConnectionIndicatorState {
+    bool enabled = 1;
+    uint32 usb_color = 2;       // 0xRRGGBB
+    uint32 bt_color = 3;        // 0xRRGGBB
+    uint32 key_position = 4;
+    uint32 layer_id = 5;
+}
+
+message SetConnectionIndicatorRequest {
+    oneof field {
+        bool enabled = 1;
+        uint32 usb_color = 2;
+        uint32 bt_color = 3;
+        uint32 key_position = 4;
+        uint32 layer_id = 5;
     }
 }
 
@@ -103,6 +124,8 @@ message Request {
         SetCapsLockIndicatorRequest set_caps_lock_indicator = 9;
         bool save_layer_led_state = 10;
         SetLayerLedEnabledRequest set_layer_led_enabled = 11;
+        bool get_connection_indicator = 12;
+        SetConnectionIndicatorRequest set_connection_indicator = 13;
     }
 }
 
@@ -119,6 +142,8 @@ message Response {
         bool set_caps_lock_indicator = 9;
         bool save_layer_led_state = 10;
         bool set_layer_led_enabled = 11;
+        ConnectionIndicatorState get_connection_indicator = 12;
+        bool set_connection_indicator = 13;
     }
 }
 
