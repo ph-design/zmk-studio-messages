@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package zmk.combos;
+
+import "keymap.proto";
+
+message Request {
+    oneof request_type {
+        bool list_all_combos = 1;
+        GetComboRequest get_combo = 2;
+        SetComboRequest set_combo = 3;
+    }
+}
+
+message Response {
+    oneof response_type {
+        ListAllCombosResponse list_all_combos = 1;
+        ComboConfig get_combo = 2;
+        SetComboResponse set_combo = 3;
+    }
+}
+
+message Notification {
+    oneof notification_type {
+        bool combos_changed = 1;
+    }
+}
+
+message ComboConfig {
+    uint32 index = 1;
+    int32 timeout_ms = 2;
+    int32 require_prior_idle_ms = 3;
+    bool slow_release = 4;
+    uint32 layer_mask = 5;
+    zmk.keymap.BehaviorBinding behavior = 6;
+    repeated uint32 key_positions = 7;
+    bool editable_behavior = 8;
+    bool editable_key_positions = 9;
+}
+
+message ListAllCombosResponse {
+    repeated ComboConfig combos = 1;
+}
+
+message GetComboRequest {
+    uint32 index = 1;
+}
+
+message SetComboRequest {
+    uint32 index = 1;
+    ComboConfig combo = 2;
+}
+
+message SetComboResponse {
+    oneof result {
+        bool ok = 1;
+        SetComboErrorCode err = 2;
+    }
+}
+
+enum SetComboErrorCode {
+    SET_COMBO_ERR_OK = 0;
+    SET_COMBO_ERR_GENERIC = 1;
+    SET_COMBO_ERR_INVALID_INDEX = 2;
+    SET_COMBO_ERR_INVALID_BINDING = 3;
+    SET_COMBO_ERR_UNSUPPORTED_FIELD = 4;
+}
