@@ -75,5 +75,7 @@ message LiveState {
 }
 
 message Notification {
-    LiveState live_state = 1;
+    oneof notification_type {
+        LiveState live_state = 1;
+    }
 }
