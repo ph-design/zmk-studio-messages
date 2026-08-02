@@ -9,6 +9,7 @@ import "behaviors.proto";
 import "keymap.proto";
 import "lighting.proto";
 import "combos.proto";
+import "motion.proto";
 
 message Request {
     uint32 request_id = 1;
@@ -19,6 +20,7 @@ message Request {
         zmk.keymap.Request keymap = 5;
         zmk.lighting.Request lighting = 6;
         zmk.combos.Request combos = 7;
+        zmk.motion.Request motion = 8;
     }
 }
 
@@ -38,6 +40,7 @@ message RequestResponse {
         zmk.keymap.Response keymap = 5;
         zmk.lighting.Response lighting = 6;
         zmk.combos.Response combos = 7;
+        zmk.motion.Response motion = 8;
     }
 }
 
@@ -47,5 +50,6 @@ message Notification {
         zmk.keymap.Notification keymap = 5;
         zmk.lighting.Notification lighting = 6;
         zmk.combos.Notification combos = 7;
+        zmk.motion.Notification motion = 8;
     }
 }
