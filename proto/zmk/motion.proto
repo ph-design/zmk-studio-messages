@@ -6,25 +6,29 @@ import "keymap.proto";
 
 message Request {
     oneof request_type {
-        bool        get_capabilities = 1;
-        bool        get_tap_config   = 2;
-        TapConfig   set_tap_config   = 3;
-        bool        get_carry_config = 4;
-        CarryConfig set_carry_config = 5;
-        bool        save_state       = 6;
-        bool        set_live_stream  = 7;
+        bool           get_capabilities      = 1;
+        bool           get_tap_config        = 2;
+        TapConfig      set_tap_config        = 3;
+        bool           get_carry_config      = 4;
+        CarryConfig    set_carry_config      = 5;
+        bool           save_state            = 6;
+        bool           set_live_stream       = 7;
+        bool           get_still_wake_config = 8;
+        StillWakeConfig set_still_wake_config = 9;
     }
 }
 
 message Response {
     oneof response_type {
-        Capabilities capabilities     = 1;
-        TapConfig    tap_config       = 2;
-        bool         set_tap_config   = 3;
-        CarryConfig  carry_config     = 4;
-        bool         set_carry_config = 5;
-        bool         save_state       = 6;
-        bool         set_live_stream  = 7;
+        Capabilities  capabilities           = 1;
+        TapConfig     tap_config             = 2;
+        bool          set_tap_config         = 3;
+        CarryConfig   carry_config           = 4;
+        bool          set_carry_config       = 5;
+        bool          save_state             = 6;
+        bool          set_live_stream        = 7;
+        StillWakeConfig still_wake_config    = 8;
+        bool          set_still_wake_config  = 9;
     }
 }
 
@@ -34,6 +38,7 @@ message Capabilities {
     bool   supports_double_tap = 3;
     bool   supports_carry      = 4;
     uint32 threshold_max       = 5;
+    bool   supports_still_wake = 6;
 }
 
 // Any binding may be omitted. When a single and its double are both set on
@@ -55,6 +60,14 @@ message CarryConfig {
     bool   enabled            = 1;
     uint32 motion_threshold   = 2;  // INT_THS for the any-motion interrupt
     uint32 motion_duration_ms = 3;  // walking must persist this long before sleep
+}
+
+// Keeps the keyboard awake once it has been set down: after a motion wake-up,
+// the sensor must stay still for this long or the keyboard goes straight back
+// to sleep. Settling is judged by the same any-motion streak falling silent.
+message StillWakeConfig {
+    bool   enabled             = 1;
+    uint32 settle_duration_ms  = 2;  // stillness required to stay awake
 }
 
 enum Orientation {
