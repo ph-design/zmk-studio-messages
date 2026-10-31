@@ -46,7 +46,7 @@ message SetBacklightStateRequest {
 
 message LayerLedBinding {
     uint32 key_position = 1;
-    uint32 color = 2;           // 0xRRGGBB, 0 = transparent
+    uint32 color = 2;
 }
 
 message LayerLedConfig {
@@ -64,15 +64,15 @@ message GetLayerLedColorsResponse {
 message SetLayerLedBindingRequest {
     uint32 layer_id = 1;
     uint32 key_position = 2;
-    uint32 color = 3;           // 0xRRGGBB, 0 = transparent
+    uint32 color = 3;
 }
 
 // --- CapsLock Indicator ---
 
 message CapsLockIndicatorState {
     bool enabled = 1;
-    uint32 off_color = 2;       // 0xRRGGBB
-    uint32 on_color = 3;        // 0xRRGGBB
+    uint32 off_color = 2;
+    uint32 on_color = 3;
     uint32 key_position = 4;
     uint32 layer_id = 5;
 }
@@ -89,8 +89,8 @@ message SetCapsLockIndicatorRequest {
 
 message ConnectionIndicatorState {
     bool enabled = 1;
-    uint32 usb_color = 2;       // 0xRRGGBB
-    uint32 bt_color = 3;        // 0xRRGGBB
+    uint32 usb_color = 2;
+    uint32 bt_color = 3;
     uint32 key_position = 4;
     uint32 layer_id = 5;
 }
