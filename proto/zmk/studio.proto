@@ -10,6 +10,9 @@ import "keymap.proto";
 import "lighting.proto";
 import "combos.proto";
 import "motion.proto";
+import "pairing.proto";
+import "sysinfo.proto";
+import "connection.proto";
 
 message Request {
     uint32 request_id = 1;
@@ -21,6 +24,9 @@ message Request {
         zmk.lighting.Request lighting = 6;
         zmk.combos.Request combos = 7;
         zmk.motion.Request motion = 8;
+        zmk.pairing.Request pairing = 9;
+        zmk.sysinfo.Request sysinfo = 10;
+        zmk.connection.Request connection = 11;
     }
 }
 
@@ -41,6 +47,9 @@ message RequestResponse {
         zmk.lighting.Response lighting = 6;
         zmk.combos.Response combos = 7;
         zmk.motion.Response motion = 8;
+        zmk.pairing.Response pairing = 9;
+        zmk.sysinfo.Response sysinfo = 10;
+        zmk.connection.Response connection = 11;
     }
 }
 
@@ -51,5 +60,6 @@ message Notification {
         zmk.lighting.Notification lighting = 6;
         zmk.combos.Notification combos = 7;
         zmk.motion.Notification motion = 8;
+        zmk.connection.Notification connection = 9;
     }
 }

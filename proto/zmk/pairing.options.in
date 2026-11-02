@@ -1,0 +1,3 @@
+zmk.pairing.GetPairStateResponse.rf_addr max_size:5
+zmk.pairing.GenerateAndPairResponse.key max_size:16
+zmk.pairing.GenerateAndPairResponse.rf_addr max_size:5

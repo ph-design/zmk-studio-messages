@@ -1,0 +1,98 @@
+// Rich device information exposed to ZMK Studio.
+syntax = "proto3";
+
+package zmk.sysinfo;
+
+message Request {
+    oneof request_type {
+        bool get_identity = 1;
+        bool get_firmware = 2;
+        bool get_hardware = 3;
+        bool get_runtime = 4;
+        bool get_diagnostics = 5;
+    }
+}
+
+message Response {
+    oneof response_type {
+        Identity identity = 1;
+        FirmwareInfo firmware = 2;
+        HardwareInfo hardware = 3;
+        RuntimeState runtime = 4;
+        Diagnostics diagnostics = 5;
+    }
+}
+
+// Who the device says it is.
+message Identity {
+    string name = 1;             // CONFIG_ZMK_KEYBOARD_NAME
+    bytes serial_number = 2;     // hwinfo device id (same bytes core.get_device_info returns)
+    string model = 3;            // CONFIG_ZMK_DEVICE_MODEL
+    string manufacturer = 4;     // CONFIG_ZMK_DEVICE_MANUFACTURER
+    string family = 5;           // CONFIG_ZMK_DEVICE_FAMILY, e.g. "PH60"
+}
+
+// What was built and when.
+message FirmwareInfo {
+    string zmk_version = 1;      // app/VERSION baked by the build
+    string zephyr_version = 2;   // KERNEL_VERSION_STRING
+    string build_date = 3;       // "2026-11-01" from __DATE__
+    string build_time = 4;       // "02:31:07" from __TIME__
+    string git_hash = 5;         // CONFIG_ZMK_BUILD_GIT_HASH (optional)
+    string board = 6;            // CONFIG_BOARD_TARGET
+    string studio_protocol = 7;  // protocol revision this firmware speaks
+    uint32 image_size_kb = 8;    // used flash from the linker, in KiB
+    uint32 ram_used_kb = 9;      // used RAM from the linker, in KiB
+}
+
+// What the firmware is running on.
+message HardwareInfo {
+    string mcu = 1;              // CONFIG_SOC
+    uint32 flash_kb = 2;
+    uint32 ram_kb = 3;
+    uint32 key_count = 4;
+    uint32 layer_count = 5;
+    uint32 layout_count = 6;
+    uint32 led_count = 7;
+    uint32 reset_cause_raw = 8;
+    string reset_cause = 9;      // decoded last reset cause, human readable
+    bool has_rgb = 10;
+    bool has_backlight = 11;
+    bool has_imu = 12;
+    bool has_display = 13;
+    bool has_split = 14;
+    bool has_pointing = 15;
+    bool has_ble = 16;
+    bool has_usb = 17;
+    bool has_2g4 = 18;
+}
+
+// Live, cheap-to-sample state.
+message RuntimeState {
+    uint32 uptime_s = 1;
+    int32 battery_percent = 2;   // -1 when the firmware cannot report it
+    uint32 battery_mv = 3;
+    bool charging = 4;
+    uint32 active_layer = 5;
+    uint32 highest_layer = 6;
+    bool usb_present = 7;
+    bool hid_ready = 8;
+    string endpoint = 9;         // "USB", "BLE:0", "2.4G"
+    uint32 ble_profile = 10;
+    bool ble_connected = 11;
+    uint32 idle_state = 12;      // zmk_activity_state: 0 active / 1 idle / 2 sleep
+    bool rgb_enabled = 13;
+    uint32 vddh_mv = 14;         // 5000 when USB-powered, 0 when unknown
+    bool two_g4_paired = 15;     // key and address are both paired
+}
+
+// Numbers that help someone diagnose a sick keyboard.
+message Diagnostics {
+    uint32 rpc_stack_used_pct = 1;
+    uint32 workq_stack_used_pct = 2;
+    uint32 heap_free = 3;
+    uint32 settings_save_pending = 4;
+    uint32 two_g4_tx_total = 5;
+    uint32 two_g4_tx_fail = 6;
+    uint32 studio_rpc_dropped = 7;
+}

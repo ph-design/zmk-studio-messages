@@ -1,0 +1,110 @@
+// Connection management.
+syntax = "proto3";
+
+package zmk.connection;
+
+enum Transport {
+    ZMK_CONNECTION_TRANSPORT_USB = 0;
+    ZMK_CONNECTION_TRANSPORT_BLE = 1;
+    ZMK_CONNECTION_TRANSPORT_2G4 = 2;
+}
+
+enum SwitchResult {
+    ZMK_CONNECTION_SWITCH_RESULT_OK = 0;
+    // Accepted, but the reply is sent before the radio restarts; the caller must
+    // expect the RPC link to drop.
+    ZMK_CONNECTION_SWITCH_RESULT_PENDING = 1;
+    ZMK_CONNECTION_SWITCH_RESULT_UNSUPPORTED = 2;
+    ZMK_CONNECTION_SWITCH_RESULT_BUSY = 3;          // a radio switch is in flight
+    ZMK_CONNECTION_SWITCH_RESULT_USB_REQUIRED = 4;  // USB attached, cannot leave it
+    ZMK_CONNECTION_SWITCH_RESULT_INVALID = 5;
+}
+
+message SelectTransportRequest {
+    Transport transport = 1;
+}
+
+message SelectBleProfileRequest {
+    uint32 index = 1;
+}
+
+message UnpairBleProfileRequest {
+    uint32 index = 1;
+}
+
+message Request {
+    oneof request_type {
+        bool get_state = 1;
+        SelectTransportRequest select_transport = 2;
+        SelectBleProfileRequest select_ble_profile = 3;
+        UnpairBleProfileRequest unpair_ble_profile = 4;
+        bool unpair_all_ble = 5;
+        bool toggle_transport = 6;
+    }
+}
+
+message BleProfile {
+    uint32 index = 1;
+    bool open = 2;        // nothing bonded in this slot yet
+    bool connected = 3;
+    bool active = 4;
+    bytes address = 5;    // 6 bytes, empty when open
+    uint32 address_type = 6;
+}
+
+message State {
+    bool supports_usb = 1;
+    bool supports_ble = 2;
+    bool supports_2g4 = 3;
+
+    Transport active_transport = 4;
+    string endpoint = 5;          // "USB" / "BLE:1" / "2.4G"
+    bool usb_attached = 6;
+    bool usb_hid_ready = 7;
+
+    uint32 ble_active_profile = 8;
+    uint32 ble_profile_count = 9;
+    repeated BleProfile ble_profiles = 10;
+
+    bool two_g4_ready = 11;
+    bool two_g4_address_paired = 12;
+    bool two_g4_key_paired = 13;
+    uint32 two_g4_channel = 14;
+    bytes two_g4_address = 15;    // 5 bytes: 4 base + prefix
+    bool preferred_wireless_2g4 = 16;
+
+    bool radio_switching = 17;    // a BLE<->2.4G swap is running right now
+    bool ble_advertising = 18;
+}
+
+message SelectTransportResponse {
+    SwitchResult result = 1;
+    State state = 2;
+}
+
+message Response {
+    oneof response_type {
+        State get_state = 1;
+        SelectTransportResponse select_transport = 2;
+        State select_ble_profile = 3;
+        State unpair_ble_profile = 4;
+        State unpair_all_ble = 5;
+        SelectTransportResponse toggle_transport = 6;
+    }
+}
+
+// Studio state change.
+message StateChanged {
+    Transport active_transport = 1;
+    uint32 ble_active_profile = 2;
+    bool ble_connected = 3;
+    bool two_g4_ready = 4;
+    bool usb_attached = 5;
+    bool radio_switching = 6;
+}
+
+message Notification {
+    oneof notification_type {
+        StateChanged connection_state_changed = 1;
+    }
+}

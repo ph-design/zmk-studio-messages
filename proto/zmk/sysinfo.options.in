@@ -1,0 +1,15 @@
+zmk.sysinfo.Identity.name max_size:40
+zmk.sysinfo.Identity.serial_number max_size:16
+zmk.sysinfo.Identity.model max_size:28
+zmk.sysinfo.Identity.manufacturer max_size:28
+zmk.sysinfo.Identity.family max_size:20
+zmk.sysinfo.FirmwareInfo.zmk_version max_size:24
+zmk.sysinfo.FirmwareInfo.zephyr_version max_size:24
+zmk.sysinfo.FirmwareInfo.build_date max_size:14
+zmk.sysinfo.FirmwareInfo.build_time max_size:14
+zmk.sysinfo.FirmwareInfo.git_hash max_size:16
+zmk.sysinfo.FirmwareInfo.board max_size:32
+zmk.sysinfo.FirmwareInfo.studio_protocol max_size:12
+zmk.sysinfo.HardwareInfo.mcu max_size:20
+zmk.sysinfo.HardwareInfo.reset_cause max_size:40
+zmk.sysinfo.RuntimeState.endpoint max_size:12

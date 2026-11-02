@@ -1,0 +1,4 @@
+zmk.connection.State.endpoint max_size:12
+zmk.connection.State.ble_profiles max_count:5
+zmk.connection.State.two_g4_address max_size:5
+zmk.connection.BleProfile.address max_size:6
