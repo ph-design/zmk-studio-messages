@@ -26,6 +26,9 @@ message ClearPairingRequest {}
 message ClearPairingResponse {}
 
 message Request {
+    reserved 4;
+    reserved "set_channel";
+
     oneof request_type {
         GetPairStateRequest get_pair_state = 1;
         GenerateAndPairRequest generate_and_pair = 2;
@@ -34,6 +37,9 @@ message Request {
 }
 
 message Response {
+    reserved 4;
+    reserved "set_channel";
+
     oneof response_type {
         GetPairStateResponse get_pair_state = 1;
         GenerateAndPairResponse generate_and_pair = 2;
