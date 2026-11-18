@@ -27,7 +27,10 @@ message Request {
         zmk.pairing.Request pairing = 9;
         zmk.sysinfo.Request sysinfo = 10;
         zmk.connection.Request connection = 11;
+        uint32 confirm_action = 13;
     }
+
+    bool supports_action_confirmation = 12;
 }
 
 message Response {
@@ -39,6 +42,7 @@ message Response {
 
 message RequestResponse {
     uint32 request_id = 1;
+    uint32 action_token = 12;
     oneof subsystem {
         zmk.meta.Response meta = 2;
         zmk.core.Response core = 3;
