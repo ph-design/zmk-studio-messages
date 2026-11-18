@@ -10,6 +10,11 @@ message HsbColor {
     uint32 b = 3; // Brightness: 0-100
 }
 
+message RgbUnderglowFade {
+    bool enabled = 1;
+    uint32 duration_ms = 2;
+}
+
 message RgbUnderglowState {
     bool on = 1;
     HsbColor color = 2;
@@ -17,6 +22,7 @@ message RgbUnderglowState {
     uint32 speed = 4;
     uint32 effect_count = 5;
     repeated string effect_names = 6;
+    RgbUnderglowFade fade = 7;
 }
 
 message SetRgbUnderglowStateRequest {
@@ -25,6 +31,7 @@ message SetRgbUnderglowStateRequest {
         HsbColor color = 2;
         uint32 effect = 3;
         uint32 speed = 4;
+        RgbUnderglowFade fade = 5;
     }
 }
 
