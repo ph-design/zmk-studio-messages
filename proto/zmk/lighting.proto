@@ -15,6 +15,15 @@ message RgbUnderglowFade {
     uint32 duration_ms = 2;
 }
 
+message RgbUnderglowIdle {
+    uint32 timeout_ms = 1;
+    bool sleep_on_usb = 2;
+}
+
+message RgbUnderglowLayerWake {
+    fixed32 layers = 1;
+}
+
 message RgbUnderglowState {
     bool on = 1;
     HsbColor color = 2;
@@ -23,15 +32,22 @@ message RgbUnderglowState {
     uint32 effect_count = 5;
     repeated string effect_names = 6;
     RgbUnderglowFade fade = 7;
+    RgbUnderglowIdle idle = 8;
+    RgbUnderglowLayerWake layer_wake = 9;
+    optional bool general_changes_pending = 10;
 }
 
 message SetRgbUnderglowStateRequest {
+    optional bool preview = 8;
+
     oneof field {
         bool on = 1;
         HsbColor color = 2;
         uint32 effect = 3;
         uint32 speed = 4;
         RgbUnderglowFade fade = 5;
+        RgbUnderglowIdle idle = 6;
+        RgbUnderglowLayerWake layer_wake = 7;
     }
 }
 
