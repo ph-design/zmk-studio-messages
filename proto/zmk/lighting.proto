@@ -38,7 +38,7 @@ message RgbUnderglowState {
 }
 
 message SetRgbUnderglowStateRequest {
-    optional bool preview = 8;
+    reserved 8;
 
     oneof field {
         bool on = 1;
