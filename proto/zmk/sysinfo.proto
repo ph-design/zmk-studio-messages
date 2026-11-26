@@ -95,4 +95,5 @@ message Diagnostics {
     uint32 two_g4_tx_total = 5;
     uint32 two_g4_tx_fail = 6;
     uint32 studio_rpc_dropped = 7;
+    optional sint32 rssi_dbm = 8; // RSSI of the active wireless Studio link
 }
